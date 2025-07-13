@@ -13,6 +13,7 @@ export const mockProjects = [
     client: 'Acme Corp',
     genre: 'Marketing',
     team: ['John', 'Sarah'],
+    featured: true,
   },
   {
     id: 'proj-002',
@@ -26,6 +27,7 @@ export const mockProjects = [
     client: 'Beta Inc',
     genre: 'Product',
     team: ['Mike', 'Anna'],
+    featured: true,
   },
   {
     id: 'proj-003',

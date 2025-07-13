@@ -9,52 +9,66 @@ export default function PageHeader({
 }) {
   return (
     <Box style={{
-      marginBottom: '2rem',
-      padding: '0 0.5rem',
-      background: '#f6f8fa',
-      border: '1px solid #e0e0e0',
-      borderRadius: '12px',
-      boxShadow: '0 2px 8px rgba(30,32,36,0.04)',
+      marginBottom: '2.5rem',
+      padding: '1.5rem 2rem',
+      background: 'linear-gradient(90deg, #fdfb86ff 10%, #fff 100%)', // Higher contrast, warm pale gold
+      border: 'none',
+      borderRadius: '16px',
+      boxShadow: '0 4px 24px rgba(30,32,36,0.10)',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '1rem',
     }}>
       <Box
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          minHeight: '3.5rem',
-          gap: '1.5rem',
+          minHeight: '4rem',
+          gap: '2.5rem',
         }}
       >
         {/* Title: left, vertically centered */}
         <Title
           order={2}
           style={{
-            fontWeight: 800,
-            fontSize: '2rem',
-            letterSpacing: '0.5px',
+            fontWeight: 900,
+            fontSize: '2.25rem',
+            letterSpacing: '0.7px',
             color: '#222',
             margin: 0,
             textAlign: 'left',
             flex: 1,
+            lineHeight: 1.1,
           }}
         >
           {title}
         </Title>
 
         {/* Actions: right, vertically centered */}
-        <Group style={{ flexShrink: 0, gap: '0.5rem' }}>
-          {actions.map((action, index) => (
-            <Button
-              key={index}
-              variant={action.variant || 'primary'}
-              size={action.size || 'medium'}
-              onClick={action.onClick}
-              disabled={action.disabled}
-              style={{ minWidth: '90px', fontWeight: 600 }}
-            >
-              {action.label}
-            </Button>
-          ))}
+        <Group style={{ flexShrink: 0, gap: '1.5rem', display: 'flex' }}>
+          {actions
+            .filter(action => action.label !== 'Bulk Edit')
+            .map((action, index, arr) => (
+              <Button
+                key={index}
+                variant={action.variant || 'primary'}
+                size={action.size || 'large'}
+                onClick={action.onClick}
+                disabled={action.disabled}
+                style={{
+                  minWidth: '110px',
+                  fontWeight: 700,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.07)',
+                  fontSize: '1rem',
+                  padding: '14px 28px',
+                  letterSpacing: '0.5px',
+                  marginRight: index !== arr.length - 1 ? '1.5rem' : 0,
+                }}
+              >
+                {action.label}
+              </Button>
+            ))}
         </Group>
       </Box>
 

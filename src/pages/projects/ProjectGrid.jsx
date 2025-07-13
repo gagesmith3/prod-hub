@@ -1,6 +1,8 @@
 import React from 'react';
 import { Box, SimpleGrid, Text } from '@mantine/core';
 import ProjectCard from './ProjectCard';
+import ProjectCardFeatured from './ProjectCardFeatured';
+import { IconStarFilled } from '@tabler/icons-react';
 
 export default function ProjectGrid({ 
   projects = [],
@@ -8,6 +10,9 @@ export default function ProjectGrid({
   selectedProjects = [],
   isLoading = false
 }) {
+  // Example: mark projects with project.featured === true as featured
+  const featuredProjects = projects.filter(p => p.featured);
+  const regularProjects = projects.filter(p => !p.featured);
   // Local state for search, sort, filter
   const [search, setSearch] = React.useState('');
   const [sort, setSort] = React.useState('name');
@@ -124,7 +129,29 @@ export default function ProjectGrid({
         </Box>
       </Box>
 
-      {/* Project Grid */}
+      {/* Featured Projects Row */}
+      {featuredProjects.length > 0 && (
+        <Box style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '2rem',
+          margin: '0 auto 2.5rem auto',
+          maxWidth: '900px',
+          justifyContent: 'flex-start',
+          alignItems: 'center',
+        }}>
+          {featuredProjects.map(project => (
+            <ProjectCardFeatured
+              key={project.id}
+              project={project}
+              onClick={onProjectClick}
+              isSelected={selectedProjects.includes(project.id)}
+            />
+          ))}
+        </Box>
+      )}
+
+      {/* Regular Project Grid */}
       <Box
         style={{
           display: 'flex',
@@ -139,10 +166,11 @@ export default function ProjectGrid({
           paddingBottom: '2rem',
         }}
       >
-        {visibleProjects.map((project) => (
+        {regularProjects.map((project) => (
           <Box
             key={project.id}
             style={{
+              position: 'relative',
               flex: '0 1 250px',
               minWidth: '200px',
               maxWidth: '250px',
@@ -154,6 +182,10 @@ export default function ProjectGrid({
               onClick={onProjectClick}
               isSelected={selectedProjects.includes(project.id)}
             />
+            {/* Empty star icon overlay for unfeatured */}
+            <Box style={{ position: 'absolute', top: 14, left: 14, zIndex: 5 }}>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffd700" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </Box>
           </Box>
         ))}
       </Box>

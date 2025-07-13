@@ -1,11 +1,5 @@
-import { Box, Title, Text } from '@mantine/core';
+import PageHeader from '../../components/layout/PageHeader';
 
 export default function Dashboard() {
-  return (
-    <Box>
-      <Title order={2}>Dashboard</Title>
-      <Text>Quick dashboard layout of upcoming calendar/task events.</Text>
-      {/* Add dashboard widgets/components here */}
-    </Box>
-  );
+  return <PageHeader title="Dashboard" subtitle="Welcome to your production hub." />;
 }

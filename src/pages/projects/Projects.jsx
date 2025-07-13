@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import PageHeader from '../../components/layout/PageHeader';
 import BulkActions from '../../components/common/BulkActions';
 import ProjectGrid from './ProjectGrid';
+import FeaturedProjectGrid from './FeaturedProjectGrid';
 import { mockProjects } from '../../data/mockData';
 
 export default function Projects() {
@@ -11,23 +12,25 @@ export default function Projects() {
   const [selectedProjects, setSelectedProjects] = useState([]);
   const [searchValue, setSearchValue] = useState('');
   const [isBulkMode, setIsBulkMode] = useState(false);
+
+  // Split featured and regular projects
+  const featuredProjects = projects.filter(p => p.featured);
+  const regularProjects = projects.filter(p => !p.featured);
   const navigate = useNavigate();
 
   // Filter projects based on search
-  const filteredProjects = projects.filter(project =>
+  const filteredProjects = regularProjects.filter(project =>
     project.title.toLowerCase().includes(searchValue.toLowerCase())
   );
 
   const handleProjectClick = (project) => {
     if (isBulkMode) {
-      // Toggle selection in bulk mode
       setSelectedProjects(prev =>
         prev.includes(project.id)
           ? prev.filter(id => id !== project.id)
           : [...prev, project.id]
       );
     } else {
-      // Navigate to project detail page
       navigate(`/projects/${project.id}`);
     }
   };
@@ -60,9 +63,6 @@ export default function Projects() {
     <Box>
       <PageHeader
         title="Projects"
-        searchValue={searchValue}
-        onSearchChange={setSearchValue}
-        searchPlaceholder="Search projects..."
         actions={[
           {
             label: '+ Create New Project',
@@ -98,6 +98,14 @@ export default function Projects() {
         )}
       </PageHeader>
 
+      {/* Featured Project Grid */}
+      <FeaturedProjectGrid
+        projects={featuredProjects}
+        onProjectClick={handleProjectClick}
+        selectedProjects={selectedProjects}
+      />
+
+      {/* Project Grid Search/Sort/Filter and Standard Grid */}
       <ProjectGrid
         projects={filteredProjects}
         onProjectClick={handleProjectClick}

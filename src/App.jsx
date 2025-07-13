@@ -3,7 +3,7 @@ import Projects from './pages/projects/Projects';
 import Calendar from './pages/calendar/Calendar';
 import Team from './pages/team/Team';
 
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { theme } from './theme';
 import ViewProject from './pages/projects/ViewProject';
 import { MantineProvider } from '@mantine/core';
@@ -15,6 +15,7 @@ function App() {
       <Router basename="/prod-hub">
         <MainLayout>
           <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/projects/:projectId" element={<ViewProject />} />
