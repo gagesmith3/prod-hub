@@ -12,7 +12,7 @@ import MainLayout from './components/layout/MainLayout';
 function App() {
   return (
     <MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
-      <Router>
+      <Router basename="/prod-hub">
         <MainLayout>
           <Routes>
             <Route path="/dashboard" element={<Dashboard />} />
