@@ -1,0 +1,48 @@
+/* 
+ * Modern scrollbar styling for main content area
+ * Uses progressive enhancement for cross-browser support
+ */
+
+.main-content {
+  /* Modern browsers with standard scrollbar properties */
+  scrollbar-width: thin; /* Firefox 64+ */
+  scrollbar-color: #c1c8cd #f1f3f4; /* Firefox 64+ */
+}
+
+/* Webkit browsers (Chrome, Safari, Edge) scrollbar styling */
+.main-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.main-content::-webkit-scrollbar-track {
+  background: #f1f3f4;
+  border-radius: 4px;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+  background: #c1c8cd;
+  border-radius: 4px;
+  border: 2px solid #f1f3f4;
+  transition: background-color 0.2s ease;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover {
+  background: #a8b3ba;
+}
+
+.main-content::-webkit-scrollbar-thumb:active {
+  background: #8e9ba3;
+}
+
+/* Make scrollbar appear only on hover for cleaner look */
+.main-content::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+.main-content:hover::-webkit-scrollbar-thumb {
+  background: #c1c8cd;
+}
+
+.main-content:hover::-webkit-scrollbar-thumb:hover {
+  background: #a8b3ba;
+}
