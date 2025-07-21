@@ -7,9 +7,20 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { theme } from './theme';
 import ViewProject from './pages/projects/ViewProject';
 import { MantineProvider } from '@mantine/core';
+import { useEffect } from 'react';
 import MainLayout from './components/layout/MainLayout';
 
 function App() {
+  useEffect(() => {
+    // Add viewport meta tag for mobile scaling
+    const meta = document.createElement('meta');
+    meta.name = 'viewport';
+    meta.content = 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no';
+    document.head.appendChild(meta);
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
   return (
     <MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
       <Router basename="/prod-hub">

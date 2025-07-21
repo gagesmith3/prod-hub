@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import PageHeader from '../../components/layout/PageHeader';
 import BulkActions from '../../components/common/BulkActions';
 import ProjectGrid from './ProjectGrid';
-import FeaturedProjectGrid from './FeaturedProjectGrid';
+import FeaturedCarousel from './FeaturedCarousel';
 import { mockProjects } from '../../data/mockData';
 
 export default function Projects() {
@@ -98,8 +98,8 @@ export default function Projects() {
         )}
       </PageHeader>
 
-      {/* Featured Project Grid */}
-      <FeaturedProjectGrid
+      {/* Featured Projects Carousel */}
+      <FeaturedCarousel
         projects={featuredProjects}
         onProjectClick={handleProjectClick}
         selectedProjects={selectedProjects}

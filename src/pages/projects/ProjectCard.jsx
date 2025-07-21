@@ -39,13 +39,7 @@ export default function ProjectCard({ project, onClick, isSelected = false, feat
           </svg>
         </Box>
       )}
-      {featured && (
-        <Box style={{ position: 'absolute', top: 14, left: 14, zIndex: 5, transition: 'transform 0.18s cubic-bezier(.4,1.2,.4,1)' }}>
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="#ffd700" stroke="#ffd700" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.12))' }}>
-            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-          </svg>
-        </Box>
-      )}
+
       {/* Poster Image */}
       <Box
         style={{

@@ -11,7 +11,7 @@ export default function PageHeader({
     <Box style={{
       marginBottom: '2.5rem',
       padding: '1.5rem 2rem',
-      background: 'linear-gradient(90deg, #fdfb86ff 10%, #fff 100%)', // Higher contrast, warm pale gold
+      background: 'linear-gradient(90deg, #2b2a27ff 100%, #fff 100%)', // Higher contrast, warm pale gold
       border: 'none',
       borderRadius: '16px',
       boxShadow: '0 4px 24px rgba(30,32,36,0.10)',
@@ -35,7 +35,7 @@ export default function PageHeader({
             fontWeight: 900,
             fontSize: '2.25rem',
             letterSpacing: '0.7px',
-            color: '#222',
+            color: '#ffd700',
             margin: 0,
             textAlign: 'left',
             flex: 1,

@@ -1,7 +1,8 @@
 import { Box, Text, Badge } from '@mantine/core';
+import './ProjectCard.css';
 
 export default function ProjectCardFeatured({ project, onClick, isSelected = false }) {
-  const { id, title, poster, status, lastModified, client, genre, team } = project;
+  const { id, title, poster, status, lastModified } = project;
 
   const statusColors = {
     'in-progress': '#4CAF50',
@@ -13,41 +14,49 @@ export default function ProjectCardFeatured({ project, onClick, isSelected = fal
   return (
     <Box
       onClick={() => onClick?.(project)}
+      className="project-card featured"
       style={{
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'stretch',
-        background: '#fffbe6',
-        boxShadow: '0 8px 32px rgba(30,32,36,0.16)',
+        width: '100%',
+        maxWidth: '400px', // Wider for 16x9
+        height: '375px', // Match ProjectCard height
         borderRadius: '18px',
         overflow: 'hidden',
+        background: '#fffbe6',
+        boxShadow: '0 8px 32px rgba(30,32,36,0.16)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'stretch',
+        justifyContent: 'flex-start',
         border: isSelected ? '3px solid #ffd700' : '1.5px solid #c1c8cd',
-        minHeight: '180px',
-        maxWidth: '600px',
-        width: '100%',
-        margin: '0 auto',
         position: 'relative',
         transition: 'transform 0.18s cubic-bezier(.4,1.2,.4,1)',
       }}
     >
-      {/* Poster Image Horizontal */}
+      {/* Featured Star Icon */}
+      <Box style={{ position: 'absolute', top: 14, left: 14, zIndex: 5 }}>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#ffd700" stroke="#ffd700" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+      </Box>
+
+      {/* Poster Image - 16x9 ratio */}
       <Box
         style={{
-          width: '180px',
-          minWidth: '180px',
-          height: '100%',
-          aspectRatio: '16/9',
+          width: '100%',
+          height: '265px', // Larger poster (16x9 for 400px width is ~225px, so this is ~18% larger)
           backgroundImage: poster
             ? `linear-gradient(rgba(30, 32, 36, 0.18), rgba(30, 32, 36, 0.18)), url(${poster})`
             : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          borderRadius: '18px 0 0 18px',
+          borderRadius: '18px',
           overflow: 'hidden',
           boxShadow: '0 4px 16px rgba(30,32,36,0.12)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          margin: '0',
+          minHeight: '0',
         }}
       >
         {!poster && (
@@ -55,30 +64,85 @@ export default function ProjectCardFeatured({ project, onClick, isSelected = fal
             {`"${title}"`}
           </Text>
         )}
+        {/* Selection Indicator */}
+        {isSelected && (
+          <Box
+            style={{
+              position: 'absolute',
+              top: '10px',
+              right: '10px',
+              width: '28px',
+              height: '28px',
+              borderRadius: '50%',
+              background: '#ffd700',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: '2px solid #fff',
+              zIndex: 3,
+            }}
+          >
+            <Text style={{ color: '#222', fontWeight: 700, fontSize: '16px' }}>✓</Text>
+          </Box>
+        )}
       </Box>
-      {/* Details Section */}
-      <Box style={{ flex: 1, padding: '1.2rem 1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '0.5rem' }}>
-        <Text size="xl" style={{ fontWeight: 800, color: '#222', marginBottom: '0.25rem', letterSpacing: '0.5px' }}>{title}</Text>
-        <Box style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '0.5rem' }}>
-          <Badge color={statusColors[status]} variant="filled" size="md" style={{ fontSize: '15px', padding: '0 10px' }}>
+
+      {/* Project Info Below Poster */}
+      <Box style={{ padding: '0.35rem 0.7rem 0.25rem 0.7rem', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', gap: '0.18rem' }}>
+        <Text
+          size="md"
+          style={{
+            fontWeight: 800,
+            marginBottom: '3px',
+            color: '#222',
+            textAlign: 'center',
+            lineHeight: 1.15,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            display: '-webkit-box',
+            WebkitLineClamp: 1,
+            WebkitBoxOrient: 'vertical',
+            whiteSpace: 'normal',
+            letterSpacing: '0.5px',
+            fontSize: '1rem',
+            minHeight: '1.1em',
+          }}
+        >
+          {`"${title}"`}
+        </Text>
+        <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '2px', marginTop: '0px' }}>
+          <Badge
+            color={statusColors[status]}
+            variant="filled"
+            size="sm"
+            style={{ fontSize: '12px', padding: '0 7px', boxShadow: status === 'completed' ? '0 2px 8px rgba(76,175,80,0.12)' : undefined, background: status === 'completed' ? '#4CAF50' : undefined, color: status === 'completed' ? '#fff' : undefined }}
+          >
             {status === 'completed' && '✓'}
             {status === 'in-progress' && '⏳'}
             {status === 'archived' && '🗄️'}
             {status !== 'completed' && status !== 'in-progress' && status !== 'archived' && status.replace('-', ' ')}
           </Badge>
-          <Text size="xs" style={{ color: '#888', fontSize: '11px', fontWeight: 500 }}>
+          <Text size="xs" style={{ color: '#888', fontSize: '9px', fontWeight: 500 }}>
             {new Date(lastModified).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
           </Text>
         </Box>
-        <Text size="sm" style={{ color: '#555', marginBottom: '0.25rem' }}><b>Client:</b> {client}</Text>
-        <Text size="sm" style={{ color: '#555', marginBottom: '0.25rem' }}><b>Genre:</b> {genre}</Text>
-        <Text size="sm" style={{ color: '#555', marginBottom: '0.25rem' }}><b>Team:</b> {team && team.join(', ')}</Text>
-      </Box>
-      {/* Featured Star */}
-      <Box style={{ position: 'absolute', top: 14, left: 14, zIndex: 5 }}>
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="#ffd700" stroke="#ffd700" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.12))' }}>
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-        </svg>
+        {/* Additional Details - smaller */}
+        {project.client && (
+          <Text size="xs" style={{ color: '#555', textAlign: 'center', fontWeight: 500, marginTop: '2px' }}>
+            <b>Client:</b> {project.client}
+          </Text>
+        )}
+        {project.genre && (
+          <Text size="xs" style={{ color: '#555', textAlign: 'center', fontWeight: 500, marginTop: '1px' }}>
+            <b>Genre:</b> {project.genre}
+          </Text>
+        )}
+        {project.team && (
+          <Text size="xs" style={{ color: '#555', textAlign: 'center', fontWeight: 500, marginTop: '1px' }}>
+            <b>Team:</b> {project.team.join(', ')}
+          </Text>
+        )}
       </Box>
     </Box>
   );
