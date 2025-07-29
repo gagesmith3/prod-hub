@@ -1,14 +1,21 @@
-import { Paper, Title, Text, Group, Badge } from '@mantine/core';
-
+import { Paper, Text } from '@mantine/core';
+import ProjectDetailsCard from './ProjectDetailsCard';
 
 export default function OverviewTab({ project }) {
   return (
     <Paper shadow="md" radius="lg" p="xl" mb="xl" withBorder>
-      <div style={{ display: 'flex', gap: '2.5rem', alignItems: 'flex-start' }}>
+      <div style={{ 
+        display: 'flex', 
+        gap: '2rem', 
+        alignItems: 'flex-start', 
+        flexWrap: 'nowrap',
+        minHeight: '400px'
+      }}>
         {/* Poster Image */}
         <div style={{
-          width: '320px',
-          minWidth: '220px',
+          width: '280px',
+          minWidth: '280px',
+          flexShrink: 0,
           aspectRatio: '2/3',
           borderRadius: '18px',
           boxShadow: '0 8px 32px rgba(30,32,36,0.16)',
@@ -18,6 +25,8 @@ export default function OverviewTab({ project }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          border: '2.5px solid #eaeaea',
+          transition: 'box-shadow 0.2s',
         }}>
           {!project.poster && (
             <Text size="xl" style={{ color: '#fff', textAlign: 'center', width: '100%' }}>
@@ -26,28 +35,8 @@ export default function OverviewTab({ project }) {
           )}
         </div>
         {/* Details */}
-        <div style={{ flex: 1 }}>
-          <Group position="apart" mb="sm">
-            <Title order={2}>{project.title}</Title>
-            <Badge color="blue" size="lg">{project.type || 'Project'}</Badge>
-          </Group>
-          <Text size="md" style={{ color: '#555', marginBottom: '1rem' }}>
-            {project.description}
-          </Text>
-          <Group spacing="xl" mb="sm">
-            <Text size="sm" style={{ color: '#888' }}>
-              <strong>Client:</strong> {project.client || 'N/A'}
-            </Text>
-            <Text size="sm" style={{ color: '#888' }}>
-              <strong>Genre:</strong> {project.genre || 'N/A'}
-            </Text>
-            <Text size="sm" style={{ color: '#888' }}>
-              <strong>Start Date:</strong> {project.dateStarted || 'N/A'}
-            </Text>
-            <Text size="sm" style={{ color: '#888' }}>
-              <strong>Goal Date:</strong> {project.dateRequired || 'N/A'}
-            </Text>
-          </Group>
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+          <ProjectDetailsCard project={project} />
         </div>
       </div>
     </Paper>

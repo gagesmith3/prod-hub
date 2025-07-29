@@ -16,14 +16,15 @@ export default function MainLayout({ children }) {
       flexDirection: 'column',
       width: '100vw',
       height: '100vh',
-      fontFamily: 'Segoe UI, Arial, sans-serif',
-      overflow: 'hidden', // Prevent scrolling on the outer shell
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+      overflow: 'hidden',
+      background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', // Dark Netflix-style background
     }}>
       <Header />
       <Box style={{
         display: 'flex',
         flex: 1,
-        background: '#f6f8fa',
+        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
         minHeight: 0,
         overflow: 'hidden',
         position: 'relative',
@@ -34,18 +35,46 @@ export default function MainLayout({ children }) {
               opened={drawerOpened}
               onClick={() => setDrawerOpened((o) => !o)}
               size={28}
-              color="#222"
-              style={{ position: 'absolute', top: 18, left: 18, zIndex: 100 }}
+              color="#94a3b8"
+              style={{ 
+                position: 'absolute', 
+                top: 18, 
+                left: 18, 
+                zIndex: 100,
+                background: 'rgba(255, 255, 255, 0.1)',
+                borderRadius: '12px',
+                padding: '8px',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                transition: 'all 0.2s ease'
+              }}
               aria-label="Open navigation"
             />
             <Drawer
               opened={drawerOpened}
               onClose={() => setDrawerOpened(false)}
               padding="md"
-              size="80vw"
-              overlayOpacity={0.55}
-              overlayBlur={2}
+              size="85vw"
+              overlayOpacity={0.7}
+              overlayBlur={12}
               zIndex={200}
+              styles={{
+                drawer: {
+                  background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+                  border: 'none',
+                  boxShadow: '0 25px 50px rgba(0, 0, 0, 0.25)'
+                },
+                header: {
+                  background: 'transparent',
+                  borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+                },
+                closeButton: {
+                  color: '#94a3b8',
+                  '&:hover': {
+                    background: 'rgba(255, 255, 255, 0.1)'
+                  }
+                }
+              }}
             >
               <Navbar mobile onNavigate={() => setDrawerOpened(false)} />
             </Drawer>
@@ -55,17 +84,30 @@ export default function MainLayout({ children }) {
         )}
         <Box component="main" className="main-content" style={{
           flex: 1,
-          padding: isMobile ? '1rem' : '2.5rem 3.5rem 2.5rem 1.5rem',
-          background: '#fff',
-          borderRadius: isMobile ? '0' : '12px',
-          margin: isMobile ? '0' : '1.5rem 2rem 1.5rem 1.5rem', // Add right margin for desktop
-          boxShadow: isMobile ? 'none' : '0 2px 16px rgba(0,0,0,0.07)',
+          padding: 0, // Remove padding to let individual pages handle their own spacing
+          background: 'transparent', // Let the dark background show through
+          borderRadius: 0,
+          margin: 0,
+          boxShadow: 'none',
           minWidth: 0,
           height: 'auto',
-          color: '#222',
+          color: '#f8fafc',
           overflow: 'auto',
-          maxHeight: isMobile ? '100vh' : 'calc(100vh - 7rem)',
-          maxWidth: isMobile ? '100vw' : 'calc(100vw - 80px)',
+          maxHeight: '100vh',
+          maxWidth: isMobile ? '100vw' : 'calc(100vw - 120px)', // Account for new smaller sidebar width
+          position: 'relative',
+          // Add subtle inner shadow for depth
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '40px',
+            background: 'linear-gradient(180deg, rgba(0,0,0,0.1) 0%, transparent 100%)',
+            pointerEvents: 'none',
+            zIndex: 1
+          }
         }}>
           {children}
         </Box>

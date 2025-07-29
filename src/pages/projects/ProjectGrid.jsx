@@ -19,10 +19,30 @@ export default function ProjectGrid({
   const [filter, setFilter] = React.useState('all');
   if (isLoading) {
     return (
-      <Box style={{ textAlign: 'center', padding: '4rem' }}>
-        <Text size="lg" style={{ color: '#666' }}>Loading projects...</Text>
+      <Box style={{ 
+        textAlign: 'center', 
+        padding: '4rem',
+        background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+        borderRadius: '16px',
+        border: '1px solid #e2e8f0'
+      }}>
+        <div style={{
+          width: '40px',
+          height: '40px',
+          border: '4px solid #e2e8f0',
+          borderTop: '4px solid #3b82f6',
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite',
+          margin: '0 auto 1rem auto'
+        }}></div>
+        <Text size="lg" style={{ 
+          color: '#475569',
+          fontWeight: 600
+        }}>
+          Loading projects...
+        </Text>
       </Box>
-);
+    );
   }
 
   // Filter, search, and sort logic
@@ -50,53 +70,88 @@ export default function ProjectGrid({
 
   return (
     <>
-      {/* Top Bar: Search, Filter, Sort */}
+      {/* Netflix-style Search & Filter Bar */}
       <Box style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.5rem',
-        margin: '0 auto 1.5rem auto',
-        maxWidth: '1200px',
-        padding: '0.5rem 0',
-        background: 'none',
-        borderRadius: 0,
-        boxShadow: 'none',
+        background: 'linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(15,23,42,0.8) 100%)',
+        borderRadius: '16px',
+        padding: '24px',
+        marginBottom: '32px',
+        backdropFilter: 'blur(20px)',
+        border: '1px solid rgba(255,255,255,0.1)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
       }}>
         <Box style={{
-          display: 'flex',
-          gap: '1.5rem',
-          alignItems: 'flex-end',
+          display: 'grid',
+          gridTemplateColumns: '2fr 1fr 1fr',
+          gap: '20px',
+          alignItems: 'end',
         }}>
-          <Box style={{ flex: 2, display: 'flex', flexDirection: 'column' }}>
-            <Text size="sm" style={{ color: '#888', marginBottom: '0.25rem', marginLeft: '2px' }}>Search</Text>
+          {/* Search Input */}
+          <Box>
+            <Text size="sm" style={{ 
+              color: '#e2e8f0', 
+              marginBottom: '8px', 
+              fontWeight: 600,
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px',
+              fontSize: '11px'
+            }}>
+              🔍 Search Projects
+            </Text>
             <input
               type="text"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder="Search projects..."
+              placeholder="Find your next project..."
               style={{
-                padding: '0.5rem 1rem',
-                borderRadius: '8px',
-                border: '1px solid #e0e0e0',
-                fontSize: '1rem',
-                background: '#fff',
-                boxShadow: '0 1px 4px rgba(30,32,36,0.06)',
-                minWidth: '180px',
+                width: '100%',
+                padding: '12px 16px',
+                borderRadius: '12px',
+                border: '1px solid rgba(255,255,255,0.1)',
+                fontSize: '16px',
+                background: 'rgba(255,255,255,0.05)',
+                color: '#f8fafc',
+                backdropFilter: 'blur(10px)',
+                transition: 'all 0.3s ease',
+                outline: 'none'
+              }}
+              onFocus={(e) => {
+                e.target.style.border = '2px solid #e50914';
+                e.target.style.boxShadow = '0 0 0 3px rgba(229,9,20,0.1)';
+              }}
+              onBlur={(e) => {
+                e.target.style.border = '1px solid rgba(255,255,255,0.1)';
+                e.target.style.boxShadow = 'none';
               }}
             />
           </Box>
-          <Box style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-            <Text size="sm" style={{ color: '#888', marginBottom: '0.25rem', marginLeft: '2px' }}>Filter</Text>
+
+          {/* Filter Dropdown */}
+          <Box>
+            <Text size="sm" style={{ 
+              color: '#e2e8f0', 
+              marginBottom: '8px', 
+              fontWeight: 600,
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px',
+              fontSize: '11px'
+            }}>
+              📊 Filter
+            </Text>
             <select
               value={filter}
               onChange={e => setFilter(e.target.value)}
               style={{
-                padding: '0.5rem 1rem',
-                borderRadius: '8px',
-                border: '1px solid #e0e0e0',
-                fontSize: '1rem',
-                background: '#fff',
-                minWidth: '120px',
+                width: '100%',
+                padding: '12px 16px',
+                borderRadius: '12px',
+                border: '1px solid rgba(255,255,255,0.1)',
+                fontSize: '14px',
+                background: 'rgba(255,255,255,0.05)',
+                color: '#f8fafc',
+                backdropFilter: 'blur(10px)',
+                cursor: 'pointer',
+                outline: 'none'
               }}
             >
               <option value="all">All Statuses</option>
@@ -107,74 +162,67 @@ export default function ProjectGrid({
               <option value="draft">Draft</option>
             </select>
           </Box>
-          <Box style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-            <Text size="sm" style={{ color: '#888', marginBottom: '0.25rem', marginLeft: '2px' }}>Sort</Text>
+
+          {/* Sort Dropdown */}
+          <Box>
+            <Text size="sm" style={{ 
+              color: '#e2e8f0', 
+              marginBottom: '8px', 
+              fontWeight: 600,
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px',
+              fontSize: '11px'
+            }}>
+              🔄 Sort
+            </Text>
             <select
               value={sort}
               onChange={e => setSort(e.target.value)}
               style={{
-                padding: '0.5rem 1rem',
-                borderRadius: '8px',
-                border: '1px solid #e0e0e0',
-                fontSize: '1rem',
-                background: '#fff',
-                minWidth: '120px',
+                width: '100%',
+                padding: '12px 16px',
+                borderRadius: '12px',
+                border: '1px solid rgba(255,255,255,0.1)',
+                fontSize: '14px',
+                background: 'rgba(255,255,255,0.05)',
+                color: '#f8fafc',
+                backdropFilter: 'blur(10px)',
+                cursor: 'pointer',
+                outline: 'none'
               }}
             >
-              <option value="name">Sort by Name</option>
-              <option value="date">Sort by Date</option>
-              <option value="status">Sort by Status</option>
+              <option value="name">By Name</option>
+              <option value="date">By Date</option>
+              <option value="status">By Status</option>
             </select>
           </Box>
         </Box>
       </Box>
 
-      {/* Featured Projects Row */}
-      {featuredProjects.length > 0 && (
-        <Box style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '2rem',
-          margin: '0 auto 2.5rem auto',
-          maxWidth: '900px',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-        }}>
-          {featuredProjects.map(project => (
-            <ProjectCardFeatured
-              key={project.id}
-              project={project}
-              onClick={onProjectClick}
-              isSelected={selectedProjects.includes(project.id)}
-            />
-          ))}
-        </Box>
-      )}
-
-      {/* Regular Project Grid */}
+      {/* Netflix-style Project Grid */}
       <Box
         style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '2.5rem 2.5rem',
-          marginTop: '1rem',
-          justifyContent: 'center',
-          maxWidth: '1200px',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          overflow: 'visible',
-          paddingBottom: '2rem',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+          gap: '24px',
+          marginTop: '2rem',
+          padding: '0 8px'
         }}
       >
-        {regularProjects.map((project) => (
+        {visibleProjects.filter(p => !p.featured).map((project) => (
           <Box
             key={project.id}
             style={{
               position: 'relative',
-              flex: '0 1 250px',
-              minWidth: '200px',
-              maxWidth: '250px',
-              margin: '0',
+              transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-8px)';
+              e.currentTarget.style.zIndex = '10';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.zIndex = '1';
             }}
           >
             <ProjectCard
@@ -182,13 +230,33 @@ export default function ProjectGrid({
               onClick={onProjectClick}
               isSelected={selectedProjects.includes(project.id)}
             />
-            {/* Empty star icon overlay for unfeatured */}
-            <Box style={{ position: 'absolute', top: 14, left: 14, zIndex: 5 }}>
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffd700" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            </Box>
           </Box>
         ))}
       </Box>
+
+      {/* Show message if no projects match filters */}
+      {visibleProjects.filter(p => !p.featured).length === 0 && (
+        <Box style={{
+          textAlign: 'center',
+          padding: '4rem 2rem',
+          background: 'linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(15,23,42,0.6) 100%)',
+          borderRadius: '16px',
+          border: '2px dashed rgba(255,255,255,0.1)',
+          margin: '2rem 0',
+          backdropFilter: 'blur(10px)'
+        }}>
+          <Text size="xl" style={{ 
+            color: '#e2e8f0', 
+            marginBottom: '1rem',
+            fontWeight: 600
+          }}>
+            🎬 No projects found
+          </Text>
+          <Text size="md" style={{ color: '#94a3b8' }}>
+            Try adjusting your search terms or filters to find what you're looking for.
+          </Text>
+        </Box>
+      )}
     </>
   );
 }

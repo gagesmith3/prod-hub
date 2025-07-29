@@ -1,149 +1,216 @@
-import { Box, Text, Badge } from '@mantine/core';
-import './ProjectCard.css';
+import { Text } from '@mantine/core';
 
 export default function ProjectCardFeatured({ project, onClick, isSelected = false }) {
-  const { id, title, poster, status, lastModified } = project;
+  const { title, poster, status, lastModified } = project;
 
-  const statusColors = {
-    'in-progress': '#4CAF50',
-    'completed': '#2196F3',
-    'on-hold': '#FF9800',
-    'draft': '#9E9E9E',
+  const getStatusConfig = (status) => {
+    const configs = {
+      'completed': { color: '#10b981', icon: '✓' },
+      'in-progress': { color: '#3b82f6', icon: '▶️' },
+      'on-hold': { color: '#f59e0b', icon: '⏸️' },
+      'archived': { color: '#64748b', icon: '�' },
+      'draft': { color: '#6b7280', icon: '📝' }
+    };
+    return configs[status] || configs['draft'];
   };
 
   return (
-    <Box
+    <div
       onClick={() => onClick?.(project)}
-      className="project-card featured"
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick?.(project);
+        }
+      }}
+      tabIndex={0}
+      role="button"
+      aria-label={`Featured Project: ${title}, Status: ${status}`}
       style={{
         width: '100%',
-        maxWidth: '400px', // Wider for 16x9
-        height: '375px', // Match ProjectCard height
-        borderRadius: '18px',
+        maxWidth: '400px',
+        aspectRatio: '16/9', // Netflix-style wide ratio
+        borderRadius: '12px',
         overflow: 'hidden',
-        background: '#fffbe6',
-        boxShadow: '0 8px 32px rgba(30,32,36,0.16)',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'stretch',
-        justifyContent: 'flex-start',
-        border: isSelected ? '3px solid #ffd700' : '1.5px solid #c1c8cd',
         position: 'relative',
-        transition: 'transform 0.18s cubic-bezier(.4,1.2,.4,1)',
+        cursor: 'pointer',
+        transition: 'all 0.3s ease',
+        transform: isSelected ? 'scale(1.05)' : 'scale(1)',
+        boxShadow: isSelected 
+          ? '0 12px 40px rgba(0,0,0,0.3), 0 0 0 3px #3b82f6' 
+          : '0 4px 20px rgba(0,0,0,0.15)',
+        background: poster
+          ? `url(${poster}) center/cover no-repeat`
+          : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
       }}
     >
-      {/* Featured Star Icon */}
-      <Box style={{ position: 'absolute', top: 14, left: 14, zIndex: 5 }}>
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="#ffd700" stroke="#ffd700" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-        </svg>
-      </Box>
+      {/* Dark overlay gradient (Netflix style) */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 100%)',
+        zIndex: 1
+      }} />
 
-      {/* Poster Image - 16x9 ratio */}
-      <Box
-        style={{
-          width: '100%',
-          height: '265px', // Larger poster (16x9 for 400px width is ~225px, so this is ~18% larger)
-          backgroundImage: poster
-            ? `linear-gradient(rgba(30, 32, 36, 0.18), rgba(30, 32, 36, 0.18)), url(${poster})`
-            : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          borderRadius: '18px',
-          overflow: 'hidden',
-          boxShadow: '0 4px 16px rgba(30,32,36,0.12)',
+      {/* Featured badge - top left */}
+      <div style={{
+        position: 'absolute',
+        top: '12px',
+        left: '12px',
+        zIndex: 3,
+        background: 'linear-gradient(135deg, #ff6b6b, #ee5a24)',
+        color: '#fff',
+        padding: '4px 8px',
+        borderRadius: '4px',
+        fontSize: '10px',
+        fontWeight: 700,
+        textTransform: 'uppercase',
+        letterSpacing: '0.5px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
+      }}>
+        Featured
+      </div>
+
+      {/* Selection indicator - top right */}
+      {isSelected && (
+        <div style={{
+          position: 'absolute',
+          top: '12px',
+          right: '12px',
+          zIndex: 3,
+          width: '24px',
+          height: '24px',
+          borderRadius: '50%',
+          background: '#3b82f6',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          margin: '0',
-          minHeight: '0',
-        }}
-      >
-        {!poster && (
-          <Text size="lg" style={{ color: '#fff', fontWeight: 700, textAlign: 'center', padding: '1.5rem 1rem', fontSize: '1.25rem', letterSpacing: '0.5px' }}>
-            {`"${title}"`}
-          </Text>
-        )}
-        {/* Selection Indicator */}
-        {isSelected && (
-          <Box
-            style={{
-              position: 'absolute',
-              top: '10px',
-              right: '10px',
-              width: '28px',
-              height: '28px',
-              borderRadius: '50%',
-              background: '#ffd700',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              border: '2px solid #fff',
-              zIndex: 3,
-            }}
-          >
-            <Text style={{ color: '#222', fontWeight: 700, fontSize: '16px' }}>✓</Text>
-          </Box>
-        )}
-      </Box>
+          boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
+        }}>
+          <span style={{ color: '#fff', fontSize: '12px', fontWeight: 700 }}>✓</span>
+        </div>
+      )}
 
-      {/* Project Info Below Poster */}
-      <Box style={{ padding: '0.35rem 0.7rem 0.25rem 0.7rem', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', gap: '0.18rem' }}>
-        <Text
-          size="md"
-          style={{
-            fontWeight: 800,
-            marginBottom: '3px',
-            color: '#222',
-            textAlign: 'center',
-            lineHeight: 1.15,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            display: '-webkit-box',
-            WebkitLineClamp: 1,
-            WebkitBoxOrient: 'vertical',
-            whiteSpace: 'normal',
-            letterSpacing: '0.5px',
-            fontSize: '1rem',
-            minHeight: '1.1em',
-          }}
-        >
-          {`"${title}"`}
-        </Text>
-        <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '2px', marginTop: '0px' }}>
-          <Badge
-            color={statusColors[status]}
-            variant="filled"
-            size="sm"
-            style={{ fontSize: '12px', padding: '0 7px', boxShadow: status === 'completed' ? '0 2px 8px rgba(76,175,80,0.12)' : undefined, background: status === 'completed' ? '#4CAF50' : undefined, color: status === 'completed' ? '#fff' : undefined }}
-          >
-            {status === 'completed' && '✓'}
-            {status === 'in-progress' && '⏳'}
-            {status === 'archived' && '🗄️'}
-            {status !== 'completed' && status !== 'in-progress' && status !== 'archived' && status.replace('-', ' ')}
-          </Badge>
-          <Text size="xs" style={{ color: '#888', fontSize: '9px', fontWeight: 500 }}>
+      {/* Status indicator - top right corner */}
+      <div style={{
+        position: 'absolute',
+        top: '12px',
+        right: isSelected ? '44px' : '12px',
+        zIndex: 3,
+        width: '8px',
+        height: '8px',
+        borderRadius: '50%',
+        background: getStatusConfig(status).color,
+        boxShadow: '0 0 0 2px rgba(255,255,255,0.3), 0 2px 4px rgba(0,0,0,0.2)'
+      }} />
+
+      {/* Bottom content overlay */}
+      <div style={{
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        padding: '16px',
+        zIndex: 2,
+        background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 70%, transparent 100%)'
+      }}>
+        {/* Title */}
+        <div style={{
+          color: '#fff',
+          fontSize: '1.1rem',
+          fontWeight: 700,
+          marginBottom: '6px',
+          textShadow: '0 1px 3px rgba(0,0,0,0.5)',
+          lineHeight: 1.2,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap'
+        }}>
+          {title}
+        </div>
+
+        {/* Metadata row */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: '8px'
+        }}>
+          {/* Status badge */}
+          <div style={{
+            background: 'rgba(255,255,255,0.15)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255,255,255,0.2)',
+            borderRadius: '16px',
+            padding: '3px 8px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}>
+            <span style={{ fontSize: '10px' }}>{getStatusConfig(status).icon}</span>
+            <span style={{
+              color: '#fff',
+              fontSize: '10px',
+              fontWeight: 600,
+              textTransform: 'capitalize'
+            }}>
+              {status.replace('-', ' ')}
+            </span>
+          </div>
+
+          {/* Date */}
+          <div style={{
+            color: 'rgba(255,255,255,0.8)',
+            fontSize: '10px',
+            fontWeight: 500
+          }}>
             {new Date(lastModified).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-          </Text>
-        </Box>
-        {/* Additional Details - smaller */}
-        {project.client && (
-          <Text size="xs" style={{ color: '#555', textAlign: 'center', fontWeight: 500, marginTop: '2px' }}>
-            <b>Client:</b> {project.client}
-          </Text>
-        )}
-        {project.genre && (
-          <Text size="xs" style={{ color: '#555', textAlign: 'center', fontWeight: 500, marginTop: '1px' }}>
-            <b>Genre:</b> {project.genre}
-          </Text>
-        )}
-        {project.team && (
-          <Text size="xs" style={{ color: '#555', textAlign: 'center', fontWeight: 500, marginTop: '1px' }}>
-            <b>Team:</b> {project.team.join(', ')}
-          </Text>
-        )}
-      </Box>
-    </Box>
+          </div>
+        </div>
+
+        {/* Project details */}
+        <div style={{
+          display: 'flex',
+          gap: '12px',
+          fontSize: '10px',
+          color: 'rgba(255,255,255,0.9)',
+          fontWeight: 500
+        }}>
+          {project.genre && (
+            <span>{project.genre}</span>
+          )}
+          {project.client && project.genre && (
+            <span style={{ color: 'rgba(255,255,255,0.5)' }}>•</span>
+          )}
+          {project.client && (
+            <span>{project.client}</span>
+          )}
+        </div>
+      </div>
+
+      {/* Fallback content when no poster */}
+      {!poster && (
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1,
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+        }}>
+          <div style={{
+            color: '#fff',
+            fontSize: '1.2rem',
+            fontWeight: 700,
+            textAlign: 'center',
+            textShadow: '0 2px 8px rgba(0,0,0,0.3)',
+            padding: '20px'
+          }}>
+            {title}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

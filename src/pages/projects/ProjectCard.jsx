@@ -1,135 +1,231 @@
-import { Box, Text, Badge } from '@mantine/core';
-import './ProjectCard.css';
+import { Text } from '@mantine/core';
 
 export default function ProjectCard({ project, onClick, isSelected = false, featured = false }) {
-  const { id, title, poster, status, lastModified } = project;
+  const { title, poster, status, lastModified } = project;
 
-  const statusColors = {
-    'in-progress': '#4CAF50',
-    'completed': '#2196F3',
-    'on-hold': '#FF9800',
-    'draft': '#9E9E9E',
+  const getStatusConfig = (status) => {
+    const configs = {
+      'completed': { color: '#10b981', icon: '✓' },
+      'in-progress': { color: '#3b82f6', icon: '▶️' },
+      'on-hold': { color: '#f59e0b', icon: '⏸️' },
+      'archived': { color: '#64748b', icon: '📦' },
+      'draft': { color: '#6b7280', icon: '📝' }
+    };
+    return configs[status] || configs['draft'];
   };
 
   return (
-    <Box
+    <div
       onClick={() => onClick?.(project)}
-      className={`project-card${featured ? ' featured' : ''}`}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick?.(project);
+        }
+      }}
+      tabIndex={0}
+      role="button"
+      aria-label={`Project: ${title}, Status: ${status}`}
       style={{
         width: '100%',
-        maxWidth: '250px', // Constrain the card width
-        borderRadius: '18px', // Unified rounding
+        maxWidth: '280px',
+        aspectRatio: '2/3', // Movie poster aspect ratio
+        borderRadius: '12px',
         overflow: 'hidden',
-        background: '#f7f8fa', // Subtle card background
-        boxShadow: '0 8px 32px rgba(30,32,36,0.16)', // Enhanced shadow
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'stretch',
-        justifyContent: 'flex-start',
-        border: isSelected ? '3px solid #ffd700' : '1.5px solid #c1c8cd',
         position: 'relative',
-        transition: 'transform 0.18s cubic-bezier(.4,1.2,.4,1)',
+        cursor: 'pointer',
+        transition: 'all 0.3s ease',
+        transform: isSelected ? 'scale(1.08)' : 'scale(1)',
+        boxShadow: isSelected 
+          ? '0 12px 40px rgba(0,0,0,0.3), 0 0 0 3px #3b82f6' 
+          : '0 4px 20px rgba(0,0,0,0.15)',
+        background: poster
+          ? `url(${poster}) center/cover no-repeat`
+          : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+      }}
+      onMouseEnter={(e) => {
+        if (!isSelected) {
+          e.currentTarget.style.transform = 'scale(1.05)';
+          e.currentTarget.style.boxShadow = '0 8px 30px rgba(0,0,0,0.25)';
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!isSelected) {
+          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)';
+        }
       }}
     >
-      {/* Star Icon (featured or unfeatured) - only render for unfeatured if not already rendered externally */}
-      {!featured && (
-        <Box style={{ position: 'absolute', top: 14, left: 14, zIndex: 5, transition: 'transform 0.18s cubic-bezier(.4,1.2,.4,1)' }}>
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffd700" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-          </svg>
-        </Box>
-      )}
+      {/* Dark overlay gradient (Netflix style) */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.1) 100%)',
+        zIndex: 1
+      }} />
 
-      {/* Poster Image */}
-      <Box
-        style={{
-          width: '100%',
-          aspectRatio: '2/3', // Movie poster ratio
-          backgroundImage: poster
-            ? `linear-gradient(rgba(30, 32, 36, 0.18), rgba(30, 32, 36, 0.18)), url(${poster})`
-            : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          borderRadius: '18px', // Match card rounding
-          overflow: 'hidden',
-          boxShadow: '0 4px 16px rgba(30,32,36,0.12)',
+      {/* Featured star - top left (only if featured) */}
+      {featured && (
+        <div style={{
+          position: 'absolute',
+          top: '10px',
+          left: '10px',
+          zIndex: 3,
+          width: '24px',
+          height: '24px',
+          borderRadius: '50%',
+          background: 'linear-gradient(135deg, #ff6b6b, #ee5a24)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          margin: '0',
-          minHeight: '0',
-        }}
-      >
-        {!poster && (
-          <Text size="lg" style={{ color: '#fff', fontWeight: 700, textAlign: 'center', padding: '1.5rem 1rem', fontSize: '1.25rem', letterSpacing: '0.5px' }}>
-            {`"${title}"`}
-          </Text>
-        )}
-        
-        {/* Selection Indicator */}
-        {isSelected && (
-          <Box
-            style={{
-              position: 'absolute',
-              top: '10px',
-              right: '10px',
-              width: '28px',
-              height: '28px',
-              borderRadius: '50%',
-              background: '#ffd700',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              border: '2px solid #fff',
-              zIndex: 3,
-            }}
-          >
-            <Text style={{ color: '#222', fontWeight: 700, fontSize: '16px' }}>✓</Text>
-          </Box>
-        )}
-      </Box>
+          boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
+        }}>
+          <span style={{ color: '#fff', fontSize: '10px' }}>⭐</span>
+        </div>
+      )}
 
-      {/* Project Info Below Poster - Shorter Detail Section */}
-      <Box style={{ padding: '0.6rem 1rem 0.4rem 1rem', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
-        <Text
-          size="md"
-          style={{
-            fontWeight: 700,
-            marginBottom: '6px',
-            color: '#222',
-            textAlign: 'center',
-            lineHeight: 1.15,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            display: '-webkit-box',
-            WebkitLineClamp: 1,
-            WebkitBoxOrient: 'vertical',
-            whiteSpace: 'normal',
-            letterSpacing: '0.5px',
-            fontSize: '1rem',
-            minHeight: '1.3em', // Reserve space for 1 line
-          }}
-        >
-          {`"${title}"`}
-        </Text>
-        <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '4px', marginTop: '0px' }}>
-          <Badge
-            color={statusColors[status]}
-            variant="filled"
-            size="sm"
-            style={{ fontSize: '13px', padding: '0 8px', boxShadow: status === 'completed' ? '0 2px 8px rgba(76,175,80,0.12)' : undefined, background: status === 'completed' ? '#4CAF50' : undefined, color: status === 'completed' ? '#fff' : undefined }}
-          >
-            {status === 'completed' && '✓'}
-            {status === 'in-progress' && '⏳'}
-            {status === 'archived' && '🗄️'}
-            {status !== 'completed' && status !== 'in-progress' && status !== 'archived' && status.replace('-', ' ')}
-          </Badge>
-          <Text size="xs" style={{ color: '#888', fontSize: '10px', fontWeight: 500 }}>
+      {/* Selection indicator - top right */}
+      {isSelected && (
+        <div style={{
+          position: 'absolute',
+          top: '10px',
+          right: '10px',
+          zIndex: 3,
+          width: '24px',
+          height: '24px',
+          borderRadius: '50%',
+          background: '#3b82f6',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
+        }}>
+          <span style={{ color: '#fff', fontSize: '12px', fontWeight: 700 }}>✓</span>
+        </div>
+      )}
+
+      {/* Status indicator - top right corner */}
+      <div style={{
+        position: 'absolute',
+        top: '10px',
+        right: isSelected ? '40px' : '10px',
+        zIndex: 3,
+        width: '6px',
+        height: '6px',
+        borderRadius: '50%',
+        background: getStatusConfig(status).color,
+        boxShadow: '0 0 0 2px rgba(255,255,255,0.3), 0 2px 4px rgba(0,0,0,0.2)'
+      }} />
+
+      {/* Bottom content overlay */}
+      <div style={{
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        padding: '16px',
+        zIndex: 2,
+        background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 70%, transparent 100%)'
+      }}>
+        {/* Title */}
+        <div style={{
+          color: '#fff',
+          fontSize: '1rem',
+          fontWeight: 700,
+          marginBottom: '8px',
+          textShadow: '0 1px 3px rgba(0,0,0,0.5)',
+          lineHeight: 1.2,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap'
+        }}>
+          {title}
+        </div>
+
+        {/* Metadata row */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: '8px'
+        }}>
+          {/* Status badge */}
+          <div style={{
+            background: 'rgba(255,255,255,0.15)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255,255,255,0.2)',
+            borderRadius: '14px',
+            padding: '4px 8px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}>
+            <span style={{ fontSize: '10px' }}>{getStatusConfig(status).icon}</span>
+            <span style={{
+              color: '#fff',
+              fontSize: '10px',
+              fontWeight: 600,
+              textTransform: 'capitalize'
+            }}>
+              {status.replace('-', ' ')}
+            </span>
+          </div>
+
+          {/* Date */}
+          <div style={{
+            color: 'rgba(255,255,255,0.8)',
+            fontSize: '10px',
+            fontWeight: 500
+          }}>
             {new Date(lastModified).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-          </Text>
-        </Box>
-      </Box>
-    </Box>
+          </div>
+        </div>
+
+        {/* Project details */}
+        <div style={{
+          display: 'flex',
+          gap: '10px',
+          fontSize: '10px',
+          color: 'rgba(255,255,255,0.9)',
+          fontWeight: 500
+        }}>
+          {project.genre && (
+            <span>{project.genre}</span>
+          )}
+          {project.client && project.genre && (
+            <span style={{ color: 'rgba(255,255,255,0.5)' }}>•</span>
+          )}
+          {project.client && (
+            <span>{project.client}</span>
+          )}
+        </div>
+      </div>
+
+      {/* Fallback content when no poster */}
+      {!poster && (
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1,
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+        }}>
+          <div style={{
+            color: '#fff',
+            fontSize: '1rem',
+            fontWeight: 700,
+            textAlign: 'center',
+            textShadow: '0 2px 8px rgba(0,0,0,0.3)',
+            padding: '15px',
+            lineHeight: 1.2
+          }}>
+            {title}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
+

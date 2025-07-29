@@ -27,8 +27,25 @@ export default function ViewProject() {
 
   if (!project) {
     return (
-      <Box style={{ textAlign: 'center', padding: '4rem' }}>
-        <Text size="xl" style={{ color: '#666' }}>Project not found</Text>
+      <Box style={{ 
+        textAlign: 'center', 
+        padding: '4rem',
+        background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+        borderRadius: '16px',
+        border: '2px dashed #cbd5e1',
+        margin: '2rem auto',
+        maxWidth: '600px'
+      }}>
+        <Text size="xl" style={{ 
+          color: '#475569', 
+          marginBottom: '1rem',
+          fontWeight: 600
+        }}>
+          Project not found
+        </Text>
+        <Text size="md" style={{ color: '#64748b' }}>
+          The project with ID "{projectId}" could not be found. Please check the URL or return to the projects page.
+        </Text>
       </Box>
     );
   }
